@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using IpInformation.Helpers;
-using IpInformation.Entities;
-using System.Diagnostics.Metrics;
+using Common.Helpers;
+using DataAccess.Entities;
 
 namespace IpInformation.Controllers
 {
     [ApiController]
     public class IpController : ControllerBase
     {
-        private readonly Data.IpInformation _context;
+        private readonly DataAccess.Data.IpInformation _context;
 
-        public IpController(Data.IpInformation context)
+        public IpController(DataAccess.Data.IpInformation context)
         {
             _context = context;
         }
