@@ -1,0 +1,1 @@
+This Project exposes an IP information Endpoint in which it is given an IP and retuns the Country information for that IP. If the IP does not exist in the Databasem, it is Added. If the country information does not exist, it is also added. 
