@@ -1,5 +1,4 @@
 F:\ComputerScience\GitHub\IpInformation\Common\bin\Debug\net8.0\Common.deps.json
-F:\ComputerScience\GitHub\IpInformation\Common\bin\Debug\net8.0\Common.runtimeconfig.json
 F:\ComputerScience\GitHub\IpInformation\Common\bin\Debug\net8.0\Common.dll
 F:\ComputerScience\GitHub\IpInformation\Common\bin\Debug\net8.0\Common.pdb
 F:\ComputerScience\GitHub\IpInformation\Common\bin\Debug\net8.0\DataAccess.dll
@@ -14,5 +13,4 @@ F:\ComputerScience\GitHub\IpInformation\Common\obj\Debug\net8.0\Common.csproj.Up
 F:\ComputerScience\GitHub\IpInformation\Common\obj\Debug\net8.0\Common.dll
 F:\ComputerScience\GitHub\IpInformation\Common\obj\Debug\net8.0\refint\Common.dll
 F:\ComputerScience\GitHub\IpInformation\Common\obj\Debug\net8.0\Common.pdb
-F:\ComputerScience\GitHub\IpInformation\Common\obj\Debug\net8.0\Common.genruntimeconfig.cache
 F:\ComputerScience\GitHub\IpInformation\Common\obj\Debug\net8.0\ref\Common.dll

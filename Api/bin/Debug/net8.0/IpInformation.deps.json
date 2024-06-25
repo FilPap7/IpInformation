@@ -11,9 +11,6 @@
           "Common": "1.0.0",
           "DataAccess": "1.0.0",
           "Microsoft.EntityFrameworkCore": "8.0.6",
-          "Microsoft.EntityFrameworkCore.InMemory": "8.0.6",
-          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.6",
-          "Microsoft.EntityFrameworkCore.Tools": "8.0.6",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
@@ -921,11 +918,7 @@
       },
       "Common/1.0.0": {
         "dependencies": {
-          "DataAccess": "1.0.0",
-          "Microsoft.EntityFrameworkCore": "8.0.6",
-          "Microsoft.EntityFrameworkCore.InMemory": "8.0.6",
-          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.6",
-          "Microsoft.EntityFrameworkCore.Tools": "8.0.6"
+          "DataAccess": "1.0.0"
         },
         "runtime": {
           "Common.dll": {}
