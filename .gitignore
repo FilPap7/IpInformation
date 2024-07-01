@@ -1,2 +1,4 @@
 # Things to Ignore
-.vs
+.vs/
+*/bin/
+*/obj/

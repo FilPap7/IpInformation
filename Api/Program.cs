@@ -1,3 +1,4 @@
+using Common.Cache;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +10,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<DataAccess.Data.IpInformation>(options =>
+builder.Services.AddDbContext<DataAccess.Data.IpInformationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 var app = builder.Build();
 
