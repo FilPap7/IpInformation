@@ -14,8 +14,6 @@ namespace IpInformation.Controllers
     {
         private readonly DataAccess.Data.IpInformationDbContext _dbContext;
         private readonly ICacheService _cacheContext;
-        private readonly string cacheKey = "IP";
-        private readonly string cacheKey2 = "Country";
 
         public IpController(DataAccess.Data.IpInformationDbContext context, ICacheService cache)
         {
@@ -36,40 +34,38 @@ namespace IpInformation.Controllers
         [Route("Ip")]
         public async Task<IActionResult> GetIpInformation([FromBody] string Ip)
         {
-            var ipAddress = _cacheContext.GetData<IPAddresses>(Ip);
-            Countries country;
+            string ipCacheKey = $"IpInfo-{Ip}";
+            string countryCacheKey = $"CountryInfo-{Ip}";
 
-            if (ipAddress != null)
-            {
-                return Ok(await _dbContext.Countries.FirstOrDefaultAsync(x => x.ID == ipAddress.CountryId));
-            }   
-            else
+            var ipAddress = _cacheContext.GetData<IPAddresses>(ipCacheKey);
+            var country = _cacheContext.GetData<Countries>(ipCacheKey);
+
+              
+            if (ipAddress == null)
             {
                 ipAddress = await _dbContext.IPAddresses.FirstOrDefaultAsync(x => x.IP == Ip);
 
                 if (ipAddress == null)
                 {
                     // Get the Country from Ip2c Corresponding to the ID
-                    country = await Ip2c.GetIpInfo(Ip);
+                    if (country == null)
+                    {
+                        country = await Ip2c.GetIpInfo(Ip);
+                    }
 
-                    var IpAddress = new IPAddresses
+                    // Add the IP to the IPAddresses table
+                    _dbContext.IPAddresses.Add(new IPAddresses
                     {
                         IP = Ip,
                         CountryId = country.ID,
                         CreatedAt = DateTime.Now,
                         UpdatedAt = DateTime.Now
-                    };
-
-                    // Add the IP Address to the IPAddresses table
-                    _dbContext.IPAddresses.Add(IpAddress);
+                    });
 
                     await _dbContext.SaveChangesAsync();
                 }
                 else
                 {
-                    //Check if the Cache has the Country
-                    country = _cacheContext.GetData<Countries>(Ip);
-
                     if (country == null)
                     {
                         // If the Country does not exist in the Countries table, add it to the DB and the Cache
@@ -85,13 +81,13 @@ namespace IpInformation.Controllers
                         }
                     }
                 }
-
-                // Update the cache
-                _cacheContext.SetData(Ip, ipAddress, TimeSpan.FromMinutes(5));
-                _cacheContext.SetData(cacheKey2, country, TimeSpan.FromMinutes(5));
-
-                return Ok(country);
             }
+
+            // Ip and Country have values now so Update the cache
+            _cacheContext.SetData(ipCacheKey, ipAddress, TimeSpan.FromMinutes(5));
+            _cacheContext.SetData(countryCacheKey, country, TimeSpan.FromMinutes(5));
+
+            return Ok(country);
         }
     }
 }
