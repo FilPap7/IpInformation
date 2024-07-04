@@ -2,10 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Common.Helpers;
 using DataAccess.Entities;
-using Microsoft.Extensions.Caching.Memory;
 using Common.Cache;
-using System.Diagnostics.Metrics;
-using System.Net;
 
 namespace IpInformation.Controllers
 {
@@ -38,7 +35,7 @@ namespace IpInformation.Controllers
             string countryCacheKey = $"CountryInfo-{Ip}";
 
             var ipAddress = _cacheContext.GetData<IPAddresses>(ipCacheKey);
-            var country = _cacheContext.GetData<Countries>(ipCacheKey);
+            var country = _cacheContext.GetData<Countries>(countryCacheKey);
 
               
             if (ipAddress == null)
@@ -51,41 +48,55 @@ namespace IpInformation.Controllers
                     if (country == null)
                     {
                         country = await Ip2c.GetIpInfo(Ip);
+
+                        //check if country already exists in the DB
+                        var tempCountry = await _dbContext.Countries.FirstOrDefaultAsync(x => x.TwoLetterCode == country.TwoLetterCode);
+
+                        if (tempCountry != null)
+                        {
+                            country = tempCountry;
+                        }
+                        else
+                        {
+                            // Add the Country to the Countries table
+                            _dbContext.Countries.Add(country);
+                            await _dbContext.SaveChangesAsync();
+                        }
                     }
 
-                    // Add the IP to the IPAddresses table
-                    _dbContext.IPAddresses.Add(new IPAddresses
+                    ipAddress = new IPAddresses
                     {
                         IP = Ip,
                         CountryId = country.ID,
                         CreatedAt = DateTime.Now,
                         UpdatedAt = DateTime.Now
-                    });
+                    };
 
+                    // Add the IP to the IPAddresses table
+                    _dbContext.IPAddresses.Add(ipAddress);
                     await _dbContext.SaveChangesAsync();
                 }
-                else
+            }
+
+            if (country == null)
+            {
+                country = await _dbContext.Countries.FirstOrDefaultAsync(x => x.ID == ipAddress.CountryId);
+
+                // If the Country does not exist in the Countries table, add it to the DB and the Cache
+                if (country == null)
                 {
-                    if (country == null)
-                    {
-                        // If the Country does not exist in the Countries table, add it to the DB and the Cache
-                        if (await _dbContext.Countries.FirstOrDefaultAsync(x => x.ID == ipAddress.CountryId) == null)
-                        {
-                            // Get the Country from Ip2c Corresponding to the ID
-                            country = await Ip2c.GetIpInfo(Ip);
+                    // Get the Country from Ip2c Corresponding to the ID
+                    country = await Ip2c.GetIpInfo(Ip);
 
-                            // Add the Country to the Countries table
-                            _dbContext.Countries.Add(country);
-
-                            await _dbContext.SaveChangesAsync();
-                        }
-                    }
+                    // Add the Country to the Countries table
+                    _dbContext.Countries.Add(country);
+                    await _dbContext.SaveChangesAsync();
                 }
             }
 
             // Ip and Country have values now so Update the cache
-            _cacheContext.SetData(ipCacheKey, ipAddress, TimeSpan.FromMinutes(5));
-            _cacheContext.SetData(countryCacheKey, country, TimeSpan.FromMinutes(5));
+            _cacheContext.SetData(ipCacheKey, ipAddress, TimeSpan.FromMinutes(1));
+            _cacheContext.SetData(countryCacheKey, country, TimeSpan.FromMinutes(1));
 
             return Ok(country);
         }
