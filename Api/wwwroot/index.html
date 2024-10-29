@@ -1,17 +1,20 @@
-Import System.Runtime.InteropServices
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Information Lookup</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">IP Information Lookup</h1>
+        <div class="form-group">
+            <input type="text" id="ip-input" class="form-control" placeholder="Enter IP Address">
+        </div>
+        <button id="lookup-btn" class="btn btn-primary">Look Up</button>
 
-' In SDK-style projects such as this one, several assembly attributes that were historically
-' defined in this file are now automatically added during build and populated with
-' values defined in project properties. For details of which attributes are included
-' and how to customise this process see: https://aka.ms/assembly-info-properties
+        <div id="result" class="mt-4"></div>
+    </div>
 
-
-' Setting ComVisible to false makes the types in this assembly not visible to COM
-' components.  If you need to access a type in this assembly from COM, set the ComVisible
-' attribute to true on that type.
-
-<Assembly: ComVisible(False)> 
-
-' The following GUID is for the ID of the typelib if this project is exposed to COM.
-
-<Assembly: Guid("c45bda05-6e47-45c5-bd7f-6edd95b75d06")> 
+</body>
+</html>
