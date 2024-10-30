@@ -5,7 +5,7 @@ namespace Common.Cache
 {
     public class CacheService : ICacheService
     {
-        private ObjectCache _cache = MemoryCache.Default;
+        private readonly ObjectCache _cache = MemoryCache.Default;
 
         public T GetData<T>(string key)
         {

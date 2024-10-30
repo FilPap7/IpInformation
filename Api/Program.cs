@@ -1,52 +1,13 @@
-using Common.Cache;
-using Common.Configuration;
-using Microsoft.EntityFrameworkCore;
+using IpInformation;
 
-var builder = WebApplication.CreateBuilder(args);
+Host.CreateDefaultBuilder(args)
+    .ConfigureWebHostDefaults(webBuilder =>
+    {
 
-builder.WebHost.UseUrls(builder.Configuration["ApplicationUrl"]);
-
-var settings = SettingsLoader.LoadSettings("Configuration/settings.json");
-builder.Services.AddSingleton(settings);
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<DataAccess.Data.IpInformationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddScoped<ICacheService, CacheService>();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseDefaultFiles();
-
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    // Map root URL to index.html
-    endpoints.MapFallbackToController("Index", "Home");
-});
-
-app.Run();
+        AppSettings settings = SettingsLoader.LoadSettings<AppSettings>("appsettings.json");
+        
+        webBuilder.UseUrls(settings.ApplicationUrl);
+        webBuilder.UseStartup<Startup>();
+    })
+    .Build()
+    .Run();
