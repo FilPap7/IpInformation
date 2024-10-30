@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Common.Helpers;
+using IpInformation.Helpers;
 using DataAccess.Entities;
 using Common.Cache;
 

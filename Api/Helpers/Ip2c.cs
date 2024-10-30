@@ -1,6 +1,6 @@
 ﻿using DataAccess.Entities;
 
-namespace Common.Helpers
+namespace IpInformation.Helpers
 {
     public class Ip2c
     {
