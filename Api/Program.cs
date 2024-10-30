@@ -1,11 +1,13 @@
 using Common.Cache;
+using Common.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseUrls(builder.Configuration["ApplicationUrl"]);
 
-// Add services to the container.
+var settings = SettingsLoader.LoadSettings("Configuration/settings.json");
+builder.Services.AddSingleton(settings);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
