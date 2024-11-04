@@ -9,7 +9,7 @@ namespace IpInformation
         {
 
             AppSettings settings = SettingsLoader.LoadSettings<AppSettings>("appsettings.json");
-            services.AddSingleton(services);
+            services.AddSingleton(settings);
 
             services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -18,7 +18,7 @@ namespace IpInformation
 
             services.AddDbContext<DataAccess.Data.IpInformationDbContext>(options =>
             {
-                options.UseSqlServer();
+                options.UseSqlServer(settings.ConnectionStrings.DefaultConnection);
             });
 
             services.AddScoped<ICacheService, CacheService>();
@@ -33,13 +33,13 @@ namespace IpInformation
                 app.UseSwaggerUI();
             }
 
-            app.UseDefaultFiles();
+            // app.UseHttpsRedirection();
+
+            // app.UseDefaultFiles();
 
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseHttpsRedirection();
 
             app.UseEndpoints(endpoints =>
             {

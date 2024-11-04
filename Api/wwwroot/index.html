@@ -12,10 +12,8 @@
 <body>
     <div class="container">
         <h1 class="text-center">IP Information Lookup</h1>
-        <div class="form-group">
-            <input type="text" id="ip-input" class="form-control" placeholder="Enter IP Address">
-        </div>
-        <button id="lookup-btn" class="btn btn-primary">Look Up</button>
+        <button id="lookup-btn" onclick="window.location.href='/pages/LookUp.html'" class="btn btn-primary">Look Up Page</button>
+        <button id="Open-Swagger" onclick="window.location.href='http://localhost:5002/swagger/index.html'" class="btn btn-primary">Open Swagger</button>
 
         <div id="result" class="mt-4"></div>
     </div>
