@@ -8,11 +8,16 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <h1>Find Information for an IP Address</h1>
-    <input type="text" id="ipInput" placeholder="Enter IP address">
-    <button onclick="getCountryInfo()">Get Info</button>
-
-    <div id="ipInfo"></div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Find Information for an IP Address</h1>
+        <div class="input-group mb-4">
+            <input type="text" id="ipInput" class="form-control rounded" placeholder="Enter IP address" aria-label="IP Address" required>
+            <div class="input-group-append">
+                <button class="btn btn-primary rounded" onclick="getCountryInfo()">Get Info</button>
+            </div>
+        </div>
+        <div id="ipInfo" class="mt-3"></div>
+    </div>
 
     <!-- Link to the external JavaScript file -->
     <script src="../js/countryInfo.js"></script>
