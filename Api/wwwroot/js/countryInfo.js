@@ -1,6 +1,5 @@
 ﻿// Function to get country information for a specific IP address
 async function getCountryInfo() {
-    debugger;
 
     const ipInput = document.getElementById('ipInput').value;
     const ipInfoDiv = document.getElementById('ipInfo'); // Ensure this ID matches HTML
@@ -13,7 +12,7 @@ async function getCountryInfo() {
 
     try {
         // Send a POST request to the API with the IP address in the request body
-        const response = await fetch('http://localhost:5002/Ip', {
+        const response = await fetch('/Ip', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
