@@ -18,6 +18,12 @@ namespace IpInformation
     public class ConnectionStrings
     {
         public required string DefaultConnection { get; set; }
+        public required string WorkConnectionString { get; set; }
+    }
+
+    public class Constants
+    {
+        public static readonly string GoogleDNS = "8.8.8.8";
     }
 
     public static class SettingsLoader

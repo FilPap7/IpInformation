@@ -1,5 +1,7 @@
 ﻿using Common.Cache;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Configuration;
 
 namespace IpInformation
 {
@@ -18,8 +20,10 @@ namespace IpInformation
 
             services.AddDbContext<DataAccess.Data.IpInformationDbContext>(options =>
             {
-                options.UseSqlServer(settings.ConnectionStrings.DefaultConnection);
+                options.UseSqlServer(settings.ConnectionStrings.WorkConnectionString);
             });
+
+            services.AddHealthChecks();
 
             services.AddScoped<ICacheService, CacheService>();
         }

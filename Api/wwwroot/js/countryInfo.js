@@ -39,3 +39,42 @@ async function getCountryInfo() {
         ipInfoDiv.textContent = 'Error retrieving country information. Please try again.';
     }
 }
+
+async function getAllCountryInfo() {
+    try {
+        // Fetch all stored IP information from your API
+        const response = await fetch('/Ip/GetAllIp', {
+            method: 'Get'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch stored IP information');
+        }
+
+        const ipData = await response.json();
+
+        // Get the table body element
+        const tableBody = document.getElementById('ip-table-body');
+        tableBody.innerHTML = ''; // Clear any existing rows
+
+        // Populate the table with the fetched IP data
+        ipData.forEach(ip => {
+            // Fetch country information for each IP
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${ip.IP}</td> <!-- Display IP -->
+                <td>${ip.Country ? ip.Country.Name : 'No Country'}</td> <!-- Display Country Name -->
+                <td>${ip.Country ? ip.Country.TwoLetterCode : 'No Code'}</td> <!-- Display Two-Letter Code -->
+                <td>${ip.Country ? ip.Country.ThreeLetterCode : 'No Code'}</td> <!-- Display Three-Letter Code -->
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('There was an error retrieving stored IP information:', error);
+        alert('Error retrieving stored IP information. Please try again.');
+    }
+}
+
+// Call this function when the page loads
+window.onload = getAllCountryInfo;
+

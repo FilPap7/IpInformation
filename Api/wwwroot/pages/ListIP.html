@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stored IPs</title>
-    <link href="lib/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <title>IP Information Lookup</title>
+    <link href="../lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
     <div class="container mt-5">
+        <button id="Return-Page" onclick="window.location.href='../index.html'" class="btn btn-primary">Return to Main Page</button>
         <h1 class="text-center">Stored IP Addresses</h1>
         <table class="table table-striped mt-4">
             <thead>
@@ -26,11 +27,8 @@
         </table>
     </div>
 
-    <div class="container mt-5">
-        <button id="Return-Page" onclick="window.location.href='../index.html'" class="btn btn-primary">Return to Main Page</button>
-    </div>
-
-    <script src="lib/jquery/jquery.min.js"></script>
-    <script src="js/ip-list.js"></script>
+    <!-- Link to the external JavaScript file -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/countryInfo.js"></script>
 </body>
 </html>
