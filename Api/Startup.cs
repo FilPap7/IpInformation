@@ -20,7 +20,7 @@ namespace IpInformation
 
             services.AddDbContext<DataAccess.Data.IpInformationDbContext>(options =>
             {
-                options.UseSqlServer(settings.ConnectionStrings.WorkConnectionString);
+                options.UseSqlServer(settings.ConnectionStrings.DefaultConnection);
             });
 
             services.AddHealthChecks();

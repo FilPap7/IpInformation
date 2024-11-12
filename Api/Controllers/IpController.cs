@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using IpInformation.Helpers;
 using DataAccess.Entities;
+using DataAccess.Data;
 using Common.Cache;
 
 namespace IpInformation.Controllers
@@ -9,10 +10,10 @@ namespace IpInformation.Controllers
     [ApiController]
     public class IpController : ControllerBase
     {
-        private readonly DataAccess.Data.IpInformationDbContext _dbContext;
+        private readonly IpInformationDbContext _dbContext;
         private readonly ICacheService _cacheContext;
 
-        public IpController(DataAccess.Data.IpInformationDbContext context, ICacheService cache)
+        public IpController(IpInformationDbContext context, ICacheService cache)
         {
             _dbContext = context;
             _cacheContext = cache;
@@ -25,6 +26,15 @@ namespace IpInformation.Controllers
             var ipAddresses = await _dbContext.IPAddresses.ToListAsync();
 
             return Ok(ipAddresses);
+        }
+
+        [HttpGet]
+        [Route("Ip/GetAllCountryWithIpInfo")]
+        public async Task<IActionResult> GetAllInfo()
+        {
+            var countriesWithIp = await HelperMethods.CreateCountryWithIPList(_dbContext);
+
+            return Ok(countriesWithIp);
         }
 
         [HttpPost]
