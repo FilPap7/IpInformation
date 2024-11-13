@@ -23,6 +23,8 @@ namespace IpInformation.Controllers
         [Route("Ip")]
         public async Task<IActionResult> GetIpInformation([FromBody] string Ip)
         {
+            if (!IpValidator.IsValidIp(Ip)) return BadRequest("An Invalid IP was Given");
+
             var country = await HelperMethods.FindSingleIp(_dbContext, _cacheContext, Ip);
 
             return Ok(country);
