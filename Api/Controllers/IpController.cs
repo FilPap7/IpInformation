@@ -19,6 +19,15 @@ namespace IpInformation.Controllers
             _cacheContext = cache;
         }
 
+        [HttpPost]
+        [Route("Ip")]
+        public async Task<IActionResult> GetIpInformation([FromBody] string Ip)
+        {
+            var country = await HelperMethods.FindSingleIp(_dbContext, _cacheContext, Ip);
+
+            return Ok(country);
+        }
+
         [HttpGet]
         [Route("Ip/GetAllIp")]
         public async Task<IActionResult> GetAllIpAddresses()
@@ -37,78 +46,18 @@ namespace IpInformation.Controllers
             return Ok(countriesWithIp);
         }
 
-        [HttpPost]
-        [Route("Ip")]
-        public async Task<IActionResult> GetIpInformation([FromBody] string Ip)
+        [HttpGet]
+        [Route("Ip/UpdateDatabase")]
+        public async Task<IActionResult> UpdateDatabase()
         {
-            string ipCacheKey = $"IpInfo-{Ip}";
-            string countryCacheKey = $"CountryInfo-{Ip}";
+            var success = await HelperMethods.UpdateDatabaseAsync(_dbContext, _cacheContext);
 
-            var ipAddress = _cacheContext.GetData<IPAddresses>(ipCacheKey);
-            var country = _cacheContext.GetData<Countries>(countryCacheKey);
-
-              
-            if (ipAddress == null)
+            if (success)
             {
-                ipAddress = await _dbContext.IPAddresses.FirstOrDefaultAsync(x => x.IP == Ip);
-
-                if (ipAddress == null)
-                {
-                    // Get the Country from Ip2c Corresponding to the ID
-                    if (country == null)
-                    {
-                        country = await Ip2c.GetIpInfo(Ip);
-
-                        //check if country already exists in the DB
-                        var tempCountry = await _dbContext.Countries.FirstOrDefaultAsync(x => x.TwoLetterCode == country.TwoLetterCode);
-
-                        if (tempCountry != null)
-                        {
-                            country = tempCountry;
-                        }
-                        else
-                        {
-                            // Add the Country to the Countries table
-                            _dbContext.Countries.Add(country);
-                            await _dbContext.SaveChangesAsync();
-                        }
-                    }
-
-                    ipAddress = new IPAddresses
-                    {
-                        IP = Ip,
-                        CountryId = country.ID,
-                        CreatedAt = DateTime.Now,
-                        UpdatedAt = DateTime.Now
-                    };
-
-                    // Add the IP to the IPAddresses table
-                    _dbContext.IPAddresses.Add(ipAddress);
-                    await _dbContext.SaveChangesAsync();
-                }
+                return Ok();
             }
 
-            if (country == null)
-            {
-                country = await _dbContext.Countries.FirstOrDefaultAsync(x => x.ID == ipAddress.CountryId);
-
-                // If the Country does not exist in the Countries table, add it to the DB and the Cache
-                if (country == null)
-                {
-                    // Get the Country from Ip2c Corresponding to the ID
-                    country = await Ip2c.GetIpInfo(Ip);
-
-                    // Add the Country to the Countries table
-                    _dbContext.Countries.Add(country);
-                    await _dbContext.SaveChangesAsync();
-                }
-            }
-
-            // Ip and Country have values now so Update the cache
-            _cacheContext.SetData(ipCacheKey, ipAddress, TimeSpan.FromMinutes(1));
-            _cacheContext.SetData(countryCacheKey, country, TimeSpan.FromMinutes(1));
-
-            return Ok(country);
+            return BadRequest("DataBase Update resulted in Error");
         }
     }
 }

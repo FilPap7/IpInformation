@@ -43,7 +43,7 @@ async function getCountryInfo() {
 async function getAllCountryInfo() {
     try {
         // Fetch all stored IP information from your API
-        const response = await fetch('/Ip/GetAllIp', {
+        const response = await fetch('/Ip/GetAllCountryWithIpInfo', {
             method: 'Get'
         });
 
@@ -63,9 +63,9 @@ async function getAllCountryInfo() {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${ip.IP}</td> <!-- Display IP -->
-                <td>${ip.Country ? ip.Country.Name : 'No Country'}</td> <!-- Display Country Name -->
-                <td>${ip.Country ? ip.Country.TwoLetterCode : 'No Code'}</td> <!-- Display Two-Letter Code -->
-                <td>${ip.Country ? ip.Country.ThreeLetterCode : 'No Code'}</td> <!-- Display Three-Letter Code -->
+                <td>${ip.countryName}</td> <!-- Display Country Name -->
+                <td>${ip.twoLetterCode}</td> <!-- Display Two-Letter Code -->
+                <td>${ip.threeLetterCode}</td> <!-- Display Three-Letter Code -->
             `;
             tableBody.appendChild(row);
         });

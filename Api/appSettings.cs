@@ -24,6 +24,7 @@ namespace IpInformation
     public class Constants
     {
         public static readonly string GoogleDNS = "8.8.8.8";
+        public static readonly TimeSpan DatabaseUpdateIntervalTime = TimeSpan.FromMinutes(60);
     }
 
     public static class SettingsLoader
