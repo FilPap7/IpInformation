@@ -13,3 +13,13 @@ h1 {
     left: 50%;
     transform: translateX(-50%);
 }
+
+#table-container {
+    min-height: 1600px; /* Adjust this based on the table's typical height */
+}
+
+.pagination-container {
+    text-align: center !important;
+    margin-top: 20px;
+    height: 1000px; /* Keeps pagination controls area consistent */
+}
