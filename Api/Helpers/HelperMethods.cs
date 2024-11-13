@@ -1,9 +1,8 @@
-﻿using Common.Cache;
+﻿using Common;
+using Common.Cache;
 using DataAccess.Data;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Metrics;
-using System.Net;
 
 namespace IpInformation.Helpers
 {

@@ -1,5 +1,5 @@
+using Common;
 using Microsoft.AspNetCore.Mvc;
-using IpInformation.Helpers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Data.SqlClient;
 
