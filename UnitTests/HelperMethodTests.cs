@@ -54,7 +54,7 @@ namespace UnitTests
             Assert.Equal("C1", result[0].TwoLetterCode);
             Assert.Equal("C1A", result[0].ThreeLetterCode);
         }
-        /*
+        
         
         [Fact]
         public async Task CreateCountryWithIPList_ThrowsException_WhenCountryNotFound()
@@ -83,6 +83,6 @@ namespace UnitTests
             Assert.Empty(result);
         }
 
-        */
+        
     }
 }
