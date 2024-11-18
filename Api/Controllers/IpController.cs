@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IpInformation.Helpers;
-using DataAccess.Entities;
 using DataAccess.Data;
 using Common.Cache;
 
@@ -35,6 +34,20 @@ namespace IpInformation.Controllers
         public async Task<IActionResult> GetAllIpAddresses()
         {
             var ipAddresses = await _dbContext.IPAddresses.ToListAsync();
+
+            return Ok(ipAddresses);
+        }
+
+        [HttpPost]
+        [Route("Ip/GetAllIp")]
+        public async Task<IActionResult> GetAllIpAddresses([FromBody] int pageSize, [FromBody] string continuationToken)
+        {
+            if (pageSize <= 0)
+            {
+                return BadRequest("PageSize must be greater than 0.");
+            }
+
+            var ipAddresses = await HelperMethods.GetAllIpPaging(_dbContext, pageSize, continuationToken);
 
             return Ok(ipAddresses);
         }

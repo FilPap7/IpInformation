@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
+	<ProjectReference Include="..\Common\Common.csproj" />
+	<ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\ApiModels\ApiModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

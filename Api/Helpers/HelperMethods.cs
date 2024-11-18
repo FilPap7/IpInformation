@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using ApiModels.DTO;
+using Common;
 using Common.Cache;
 using DataAccess.Data;
 using DataAccess.Entities;
@@ -112,6 +113,42 @@ namespace IpInformation.Helpers
             return countriesWithIp;
         }
 
+        public static async Task<PagedIpAddress> GetAllIpPaging(IpInformationDbContext dbContext, int take, string? continuationToken = null)
+        {
+            IQueryable<IPAddresses> query = dbContext.IPAddresses.OrderBy(e => e.Id);
+
+            // Decode the continuation token if provided
+            if (!string.IsNullOrEmpty(continuationToken))
+            {
+                if (!int.TryParse(continuationToken, out int lastId))
+                {
+                    throw new BadHttpRequestException("Invalid continuation token");
+                }
+
+                // Start fetching data after the last ID
+                query = query.Where(e => e.Id > lastId);
+            }
+
+            // Fetch the data
+            var data = await query.Take(take).ToListAsync();
+
+            // Generate a new continuation token
+            string newContinuationToken;
+
+            if (data.Any())
+            {
+                newContinuationToken = data.Last().Id.ToString();
+            }
+            else newContinuationToken = string.Empty;
+
+
+            return new PagedIpAddress
+            {
+                Data = data,
+                ContinuationToken = newContinuationToken
+            };
+        }
+
         public static async Task<bool> UpdateDatabaseAsync(IpInformationDbContext dbContext, ICacheService cacheContext)
         {
             var ipList = await dbContext.IPAddresses.ToListAsync();
@@ -138,9 +175,8 @@ namespace IpInformation.Helpers
                     {
                         dbContext.Add(country);
                     }
+                    else ipInfo.CountryId = chechIfExists.ID;
 
-                    ipInfo.CountryId = country.ID;
-                        
                     await dbContext.SaveChangesAsync();
 
                     // Ip and Country have values now so Update the cache
