@@ -81,9 +81,11 @@ namespace IpInformation.Helpers
             return country;
         }
 
-        public static async Task<List<CountryWithIp>> CreateCountryWithIPList (IpInformationDbContext dbContext)
+        public static async Task<CountryWithIpPaged> CreateCountryWithIPList (IpInformationDbContext dbContext, int take, string? continuationToken = null)
         {
-            var ipList = await dbContext.IPAddresses.ToListAsync();
+            var ipWithContinuationToken = await GetAllIpPaging(dbContext, take, continuationToken);
+            var ipList = ipWithContinuationToken.Data;
+
             List<CountryWithIp> countriesWithIp = new List<CountryWithIp>();
 
             if (ipList != null)
@@ -110,7 +112,11 @@ namespace IpInformation.Helpers
                 }
             }
 
-            return countriesWithIp;
+            return new CountryWithIpPaged
+            {
+                CountryWithIp = countriesWithIp,
+                ContinuationToken = ipWithContinuationToken.ContinuationToken ?? string.Empty
+            };
         }
 
         public static async Task<PagedIpAddress> GetAllIpPaging(IpInformationDbContext dbContext, int take, string? continuationToken = null)

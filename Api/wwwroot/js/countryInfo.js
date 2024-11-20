@@ -30,33 +30,38 @@ function getCountryInfo() {
     });
 }
 
-let currentPage = 1;
+let currentContinuationToken = ""; // Tracks the current token
+let previousTokens = []; // Stack to track previous tokens for "Previous" functionality
 const rowsPerPage = 10;
 
 function getAllCountryInfo() {
+    const requestBody = {
+        take: rowsPerPage,
+        continuationToken: currentContinuationToken
+    };
+
     $.ajax({
-        url: '/Ip/GetAllCountryWithIpInfo',
-        method: 'GET',
-        success: function (ipData) {
-            renderTable(ipData, currentPage);
-            createPaginationControls(ipData);
+        url: '/Ip/GetAllBundledInfo',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestBody),
+        success: function (response) {
+            const { countryWithIp, continuationToken } = response;
+            renderTable(countryWithIp);
+            updatePaginationState(continuationToken);
         },
         error: function () {
             console.error('Error retrieving IP information.');
-            alert('Please try again.');
+            alert('Failed to fetch data. Please try again.');
         }
     });
 }
 
-function renderTable(data, page) {
+function renderTable(data) {
     const $tableBody = $('#ip-table-body');
     $tableBody.empty();
 
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const paginatedData = data.slice(start, end);
-
-    paginatedData.forEach(function (ip) {
+    data.forEach(function (ip) {
         const row = `<tr>
                         <td>${ip.ip}</td>
                         <td>${ip.countryName}</td>
@@ -66,50 +71,35 @@ function renderTable(data, page) {
         $tableBody.append(row);
     });
 }
-function createPaginationControls(data) {
-    const totalPages = Math.ceil(data.length / rowsPerPage);
+
+function updatePaginationState(newToken) {
     const $paginationControls = $('#pagination-controls');
     $paginationControls.empty();
 
-    // Pagination Wrapper
     const paginationList = $('<ul class="pagination justify-content-center"></ul>');
 
     // Previous Button
     const prevItem = $('<li class="page-item"><button class="page-link">Previous</button></li>');
-    if (currentPage === 1) prevItem.addClass('disabled');
+    if (previousTokens.length === 0) prevItem.addClass('disabled');
     prevItem.on('click', function () {
-        if (currentPage > 1) {
-            currentPage--;
-            renderTable(data, currentPage);
-            createPaginationControls(data);
+        if (previousTokens.length > 0) {
+            currentContinuationToken = previousTokens.pop(); // Go to the last continuation token
+            getAllCountryInfo();
         }
     });
     paginationList.append(prevItem);
 
-    // Page Number Buttons
-    for (let i = 1; i <= totalPages; i++) {
-        const pageItem = $(`<li class="page-item"><button class="page-link">${i}</button></li>`);
-        if (i === currentPage) pageItem.addClass('active');
-        pageItem.on('click', function () {
-            currentPage = i;
-            renderTable(data, currentPage);
-            createPaginationControls(data);
-        });
-        paginationList.append(pageItem);
-    }
-
     // Next Button
     const nextItem = $('<li class="page-item"><button class="page-link">Next</button></li>');
-    if (currentPage === totalPages) nextItem.addClass('disabled');
+    if (!newToken) nextItem.addClass('disabled');
     nextItem.on('click', function () {
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderTable(data, currentPage);
-            createPaginationControls(data);
+        if (newToken) {
+            previousTokens.push(currentContinuationToken); // Save current token for "Previous"
+            currentContinuationToken = newToken; // Set new token for "Next"
+            getAllCountryInfo();
         }
     });
     paginationList.append(nextItem);
 
-    // Append to controls div
     $paginationControls.append(paginationList);
 }

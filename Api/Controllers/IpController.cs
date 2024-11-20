@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using IpInformation.Helpers;
 using DataAccess.Data;
 using Common.Cache;
+using System.Text.Json;
 
 namespace IpInformation.Controllers
 {
@@ -40,25 +41,61 @@ namespace IpInformation.Controllers
 
         [HttpPost]
         [Route("Ip/GetAllIp")]
-        public async Task<IActionResult> GetAllIpAddresses([FromBody] int pageSize, [FromBody] string continuationToken)
+        public async Task<IActionResult> GetAllIpAddresses([FromBody] JsonElement payload)
         {
-            if (pageSize <= 0)
+            // Set Default Values if body is empty
+
+            int take = 100;
+            string continuationToken = string.Empty;
+
+            if (payload.TryGetProperty("take", out var idProperty))
+            {
+                take = idProperty.GetInt32();
+            }
+
+            if (payload.TryGetProperty("continuationToken", out var nameProperty))
+            {
+                continuationToken = nameProperty.GetString() ?? string.Empty;
+            }
+
+            if (take <= 0)
             {
                 return BadRequest("PageSize must be greater than 0.");
             }
 
-            var ipAddresses = await HelperMethods.GetAllIpPaging(_dbContext, pageSize, continuationToken);
+            var ipAddresses = await HelperMethods.GetAllIpPaging(_dbContext, take, continuationToken);
 
             return Ok(ipAddresses);
         }
 
-        [HttpGet]
-        [Route("Ip/GetAllCountryWithIpInfo")]
-        public async Task<IActionResult> GetAllInfo()
+        [HttpPost]
+        [Route("Ip/GetAllBundledInfo")]
+        public async Task<IActionResult> GetAllInfo([FromBody] JsonElement payload)
         {
-            var countriesWithIp = await HelperMethods.CreateCountryWithIPList(_dbContext);
 
-            return Ok(countriesWithIp);
+            // Set Default Values if body is empty
+
+            int take = 100;
+            string continuationToken = string.Empty;
+
+            if (payload.TryGetProperty("take", out var idProperty))
+            {
+                take = idProperty.GetInt32();
+            }
+
+            if (payload.TryGetProperty("continuationToken", out var nameProperty))
+            {
+                continuationToken = nameProperty.GetString() ?? string.Empty;
+            }
+
+            if (take <= 0)
+            {
+                return BadRequest("PageSize must be greater than 0.");
+            }
+
+            var countriesWithIpPaged = await HelperMethods.CreateCountryWithIPList(_dbContext, take, continuationToken);
+
+            return Ok(countriesWithIpPaged);
         }
 
         [HttpGet]

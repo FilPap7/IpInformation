@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{0621F018-4774-44AF-AAA0-1817E730AEBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{C14B2EC5-4903-4108-8303-7FBAD4FFEA3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{C14B2EC5-4903-4108-8303-7FBAD4FFEA3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{E9922329-99B5-4BF6-AF0E-1231CE1D9D9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{E9922329-99B5-4BF6-AF0E-1231CE1D9D9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiModels", "ApiModels\ApiModels.csproj", "{0865CAD5-ED55-4490-893E-D8DFB4B539BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{E9922329-99B5-4BF6-AF0E-1231CE1D9D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9922329-99B5-4BF6-AF0E-1231CE1D9D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9922329-99B5-4BF6-AF0E-1231CE1D9D9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0865CAD5-ED55-4490-893E-D8DFB4B539BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0865CAD5-ED55-4490-893E-D8DFB4B539BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0865CAD5-ED55-4490-893E-D8DFB4B539BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0865CAD5-ED55-4490-893E-D8DFB4B539BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

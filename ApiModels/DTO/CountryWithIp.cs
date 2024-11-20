@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IpInformation.Helpers
+namespace ApiModels.DTO
 {
     // This is a Class that Represents a Controller Response
     // It will take part in the Database
@@ -19,5 +19,7 @@ namespace IpInformation.Helpers
         [Required]
         [StringLength(3)] // Enforce three-letter limit
         public string ThreeLetterCode { get; set; } = string.Empty;
+
+        public string ContinuationToken { get; set; } = string.Empty;
     }
 }
