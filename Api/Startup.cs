@@ -19,7 +19,7 @@ namespace IpInformation
 
             services.AddDbContext<DataAccess.Data.IpInformationDbContext>(options =>
             {
-                options.UseSqlServer(settings.ConnectionStrings.DefaultConnection);
+                options.UseSqlServer(settings.ConnectionStrings.WorkConnectionString);
             });
 
             services.AddScoped<ICacheService, CacheService>();
