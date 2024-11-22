@@ -1,5 +1,16 @@
 ﻿body {
-    padding-top: 50px;
+    background: linear-gradient(rgba(200, 200, 200, 0.5), rgba(200, 200, 200, 0.5)), url('../images/IP Information Background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: center; /* Enables positioning of the buttons */
+    min-width: 400px; /* Set a minimum width */
+    max-height: 10000px; /* Set a maximum height */
 }
 
 h1 {
@@ -9,9 +20,39 @@ h1 {
 
 #Open-Swagger {
     position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 30%;
+    left: 15%;
+
+}
+
+#lookup-btn {
+    position: fixed;
+    top: 22.5%;
+    left: 27.5%;
+}
+
+#list-ip-btn {
+    width: 100px; /* Button size */
+    height: 100px; /* Button size */
+    background-image: url('../images/Icons/Database.png');
+    background-size: contain; /* Adjusts the image to fit inside the button */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    position: fixed;
+    top: 27.5%;
+    left: 52.5%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#list-ip-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+#list-ip-btn:active {
+    transform: scale(0.95); /* Shrinks the button when clicked */
+    opacity: 0.7; /* Darkens the button when clicked */
 }
 
 #table-container {
