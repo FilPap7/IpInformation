@@ -4,3 +4,5 @@ ToDo's
 
 1. Update Readme with the Complete Roadmap of the Project
 2. Add Caching to complete Step 1 from the Project
+
+Contributors: Icons https://www.flaticon.com/authors/ardiansya
