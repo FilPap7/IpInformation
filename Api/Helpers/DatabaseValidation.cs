@@ -10,7 +10,8 @@ namespace IpInformation.Helpers
             if (credentials.UserName.IsNullOrEmpty() || credentials.Password.IsNullOrEmpty())
                 throw new Exception("Username or Password cannot be empty");
 
-            //Place the Logic here
+            //Place the Logic here - Currently using Test Logic
+            if (credentials.UserName == "TestUserName" || credentials.Password == "TestPassword") return true;
 
             return false;
         }

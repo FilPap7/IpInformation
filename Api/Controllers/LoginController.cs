@@ -24,11 +24,11 @@ namespace IpInformation.Controllers
 
 
         [HttpPost]
-        [Route("ValidateLogin")]
+        [Route("Ip/Login")]
         public async Task<IActionResult> ValidateLoginAsync([FromBody] Credentials credentials)
         {
 
-            if (!ModelState.IsValid) throw new Exception("Model State is not valid!");
+            if (!ModelState.IsValid) Redirect("pages/Accounts/AccessDenied.html");
 
             if (credentials.UserName.IsNullOrEmpty() || credentials.Password.IsNullOrEmpty())
                 throw new Exception("Username or Password cannot be empty");
@@ -46,9 +46,17 @@ namespace IpInformation.Controllers
             var identity = new ClaimsIdentity(claims, "MyCookie");
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
 
-            return RedirectToPage("/Index");
+            try
+            {
+                await HttpContext.SignInAsync("MyCookie", claimsPrincipal);
+            }
+            catch (Exception e)
+            {
+                return Redirect("/pages/Accounts/AccessDenied.html");
+            }
+
+            return Redirect("/index.html");
         }
     }
 }
