@@ -14,12 +14,10 @@ namespace IpInformation.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IpInformationDbContext _dbContext;
-        private readonly ICacheService _cacheContext;
 
-        public LoginController(IpInformationDbContext context, ICacheService cache)
+        public LoginController(IpInformationDbContext context)
         {
             _dbContext = context;
-            _cacheContext = cache;
         }
 
 
@@ -30,26 +28,23 @@ namespace IpInformation.Controllers
 
             if (!ModelState.IsValid) Redirect("pages/Accounts/AccessDenied.html");
 
-            if (credentials.UserName.IsNullOrEmpty() || credentials.Password.IsNullOrEmpty())
-                throw new Exception("Username or Password cannot be empty");
-
-            //Create the security Context
             if (!DatabaseValidation.ValidateCredentials(credentials))
                 throw new Exception("Invalid Username or Password");
 
+            //Create the Security Context
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, "admin"),
-                new Claim(ClaimTypes.Email, "admin@mywebsite.com")
+                new Claim(ClaimTypes.Email, "admin@test.com")
             };
 
-            var identity = new ClaimsIdentity(claims, "MyCookie");
+            var identity = new ClaimsIdentity(claims, Constants.DefaultCookie);
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 
 
             try
             {
-                await HttpContext.SignInAsync("MyCookie", claimsPrincipal);
+                await HttpContext.SignInAsync(Constants.DefaultCookie, claimsPrincipal);
             }
             catch (Exception e)
             {

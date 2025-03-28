@@ -25,6 +25,7 @@ namespace IpInformation
     {
         public static readonly string GoogleDNS = "8.8.8.8";
         public static readonly TimeSpan DatabaseUpdateIntervalTime = TimeSpan.FromMinutes(60);
+        public static readonly string DefaultCookie = "TempCookieName";
     }
 
     public static class SettingsLoader
