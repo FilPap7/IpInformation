@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/IpInformation.Api/IpInformation.Api.csproj" />
+    <Project Path="src/IpInformation.Application/IpInformation.Application.csproj" />
+    <Project Path="src/IpInformation.Domain/IpInformation.Domain.csproj" />
+    <Project Path="src/IpInformation.Infrastructure/IpInformation.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/IpInformation.Application.Tests/IpInformation.Application.Tests.csproj" />
+    <Project Path="tests/IpInformation.ArchitectureTests/IpInformation.ArchitectureTests.csproj" />
+    <Project Path="tests/IpInformation.Domain.Tests/IpInformation.Domain.Tests.csproj" />
+    <Project Path="tests/IpInformation.IntegrationTests/IpInformation.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

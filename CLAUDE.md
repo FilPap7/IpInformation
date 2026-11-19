@@ -1,0 +1,27 @@
+# IpInformation — project rules
+
+Scope: this repository only. The global `CLAUDE.md` still applies; where they conflict, this file wins.
+
+## Data access
+
+- ALL database access goes through EF Core, including the report endpoint (task 3).
+- NEVER use raw SQL: no `FromSql*`, `SqlQuery*`, `ExecuteSql*`, Dapper or ADO.NET commands.
+
+## Use cases
+
+- Task 1 (IP information lookup) is a command, `ResolveIpInformationCommand`: on a cache/DB miss it calls IP2C and persists the result, so it changes state.
+- Queries never change state (global rule); the report (task 3) is a query.
+
+## Packages
+
+- MediatR is pinned to 12.5.0 (Apache-2.0). NEVER upgrade to v13+ (RPL-1.5 / commercial license).
+
+## Database seeding
+
+- Seeding is a separate step that runs after migrations. The mechanism is decided when we get there.
+
+## Git history
+
+- One commit per step (global rule).
+- Squash + force push on `main` only when we change a decision that is already pushed, so that `main` reads as a meaningful history. It is an exception, never a habit.
+- When rewriting: explain the commands first, wait for approval, use `--force-with-lease`.
