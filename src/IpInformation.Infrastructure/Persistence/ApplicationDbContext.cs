@@ -1,6 +1,7 @@
 using IpInformation.Domain.Abstractions;
 using IpInformation.Domain.Countries;
 using IpInformation.Domain.IpAddresses;
+using IpInformation.Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 
 namespace IpInformation.Infrastructure.Persistence;
@@ -11,6 +12,12 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<Country> Countries => Set<Country>();
 
     public DbSet<IpAddress> IpAddresses => Set<IpAddress>();
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        // All dates are UTC: applied once here instead of on every DateTime property.
+        configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
