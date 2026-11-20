@@ -18,6 +18,8 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15" />
     <!-- Design-time only: used by dotnet-ef to build migrations. -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.15" />
+    <!-- UI only, over the built-in /openapi/v1.json; Development only. -->
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.3.1" />
   </ItemGroup>
   <ItemGroup Label="Testing">
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
