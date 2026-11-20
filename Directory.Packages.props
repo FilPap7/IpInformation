@@ -4,6 +4,8 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="Application">
+    <PackageVersion Include="FluentValidation" Version="12.2.0" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
     <!-- Pinned: v13+ is RPL-1.5 / commercial. See CLAUDE.md. -->
     <PackageVersion Include="MediatR" Version="12.5.0" />
   </ItemGroup>
