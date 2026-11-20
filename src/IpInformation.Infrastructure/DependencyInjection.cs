@@ -1,7 +1,9 @@
+using IpInformation.Application.Abstractions.Caching;
 using IpInformation.Application.Abstractions.Data;
 using IpInformation.Domain.Abstractions;
 using IpInformation.Domain.Countries;
 using IpInformation.Domain.IpAddresses;
+using IpInformation.Infrastructure.Caching;
 using IpInformation.Infrastructure.Persistence;
 using IpInformation.Infrastructure.Persistence.Readers;
 using IpInformation.Infrastructure.Persistence.Repositories;
@@ -16,7 +18,8 @@ public static class DependencyInjection
     public const string ConnectionStringName = "Database";
 
     /// <summary>
-    /// Registers the Infrastructure layer: EF Core on SQL Server (unit of work, repositories, readers).
+    /// Registers the Infrastructure layer: EF Core on SQL Server (unit of work, repositories, readers)
+    /// and the IP information cache.
     /// </summary>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
@@ -31,6 +34,8 @@ public static class DependencyInjection
         services.AddScoped<IIpAddressRepository, IpAddressRepository>();
 
         services.AddScoped<ICountryReportReader, CountryReportReader>();
+
+        services.AddSingleton<IIpInformationCache, IpInformationCache>();
 
         return services;
     }
