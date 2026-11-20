@@ -61,7 +61,7 @@ public sealed class IpAddress : AggregateRoot
 
     // Four numbers 0-255 separated by dots; no signs, whitespace or leading zeros ("01" can mean octal).
     // IPAddress.TryParse is not used because it also accepts forms like "1" (= 0.0.0.1).
-    private static bool IsValidIpV4(string? ip)
+    public static bool IsValidIpV4(string? ip)
     {
         if (ip is null || ip.Length > IpMaxLength)
         {

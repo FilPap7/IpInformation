@@ -1,6 +1,7 @@
 using FluentValidation;
 using IpInformation.Application.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IpInformation.Application;
 
@@ -21,6 +22,8 @@ public static class DependencyInjection
         });
 
         services.AddValidatorsFromAssembly(assembly);
+
+        services.TryAddSingleton(TimeProvider.System);
 
         return services;
     }
