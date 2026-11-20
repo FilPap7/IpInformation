@@ -1,6 +1,27 @@
 @IpInformation.Api_HostAddress = http://localhost:5227
 
-GET {{IpInformation.Api_HostAddress}}/weatherforecast/
+### Task 1: IP information (cache -> database -> IP2C)
+GET {{IpInformation.Api_HostAddress}}/api/ip-information/8.8.8.8
+Accept: application/json
+
+### Task 1: private IP (IP2C answers XZ "IANA Special-Purpose Address")
+GET {{IpInformation.Api_HostAddress}}/api/ip-information/10.0.0.1
+Accept: application/json
+
+### Task 1: invalid IP -> 400 ProblemDetails
+GET {{IpInformation.Api_HostAddress}}/api/ip-information/256.1.1.1
+Accept: application/json
+
+### Task 3: report for all countries
+GET {{IpInformation.Api_HostAddress}}/api/reports/countries
+Accept: application/json
+
+### Task 3: report for some countries
+GET {{IpInformation.Api_HostAddress}}/api/reports/countries?twoLetterCodes=US&twoLetterCodes=gr
+Accept: application/json
+
+### Task 3: invalid code -> 400 ProblemDetails
+GET {{IpInformation.Api_HostAddress}}/api/reports/countries?twoLetterCodes=USA
 Accept: application/json
 
 ###
