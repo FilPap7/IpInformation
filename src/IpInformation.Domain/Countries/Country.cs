@@ -34,7 +34,7 @@ public sealed class Country : AggregateRoot
             return Result.Failure<Country>(CountryErrors.InvalidName);
         }
 
-        if (!IsLatinLetters(twoLetterCode, TwoLetterCodeLength))
+        if (!IsValidTwoLetterCode(twoLetterCode))
         {
             return Result.Failure<Country>(CountryErrors.InvalidTwoLetterCode);
         }
@@ -50,6 +50,12 @@ public sealed class Country : AggregateRoot
             threeLetterCode!.ToUpperInvariant(),
             utcNow));
     }
+
+    /// <summary>
+    /// Exactly two Latin letters, in any case.
+    /// </summary>
+    public static bool IsValidTwoLetterCode(string? twoLetterCode) =>
+        IsLatinLetters(twoLetterCode, TwoLetterCodeLength);
 
     private static bool IsLatinLetters(string? value, int length) =>
         value is not null && value.Length == length && value.All(char.IsAsciiLetter);
