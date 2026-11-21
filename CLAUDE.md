@@ -20,6 +20,15 @@ Scope: this repository only. The global `CLAUDE.md` still applies; where they co
 
 - Seed data is a manual SQL script, `docs/seed-data.sql`, run by the user in SSMS after the migrations. It is demo data only; the application never runs it. See `docs/data-model.md`.
 
+## Integration tests
+
+- Until further notice, tests that need a real database run on the local SQL Server Express, not Testcontainers
+  (exception to the global rule; Docker is not available yet).
+- They use their own database, `IpInformation_Tests`, which the test fixture migrates automatically and empties
+  before each test. The fixture refuses any database whose name does not end with `_Tests`.
+- Override the connection string with the `IPINFORMATION_TEST_DATABASE` environment variable (e.g. for a container later).
+- They carry `[Trait("Category", "Database")]`: skip them with `dotnet test --filter "Category!=Database"`.
+
 ## Git history
 
 - One commit per step (global rule).
