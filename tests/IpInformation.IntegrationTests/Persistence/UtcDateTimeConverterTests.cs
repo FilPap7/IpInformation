@@ -1,4 +1,3 @@
-using IpInformation.Infrastructure.Persistence;
 using IpInformation.Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,8 +37,7 @@ public class UtcDateTimeConverterTests
     public void Model_EveryDateTimeProperty_UsesTheUtcConverter(string table, string column)
     {
         // Building the model needs no database connection.
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlServer("Server=unused").Options;
-        using var context = new ApplicationDbContext(options);
+        using var context = TestDbContext.CreateWithoutDatabase();
 
         var property = context.Model.GetEntityTypes()
             .Single(e => e.GetTableName() == table)

@@ -5,6 +5,7 @@ using IpInformation.Domain.Abstractions;
 using IpInformation.Domain.Countries;
 using IpInformation.Domain.IpAddresses;
 using IpInformation.Infrastructure.Caching;
+using IpInformation.Infrastructure.Events;
 using IpInformation.Infrastructure.Ip2c;
 using IpInformation.Infrastructure.Persistence;
 using IpInformation.Infrastructure.Persistence.Readers;
@@ -21,7 +22,8 @@ public static class DependencyInjection
     public const string ConnectionStringName = "Database";
 
     /// <summary>
-    /// Registers the Infrastructure layer: EF Core on SQL Server (unit of work, repositories, readers),
+    /// Registers the Infrastructure layer: EF Core on SQL Server (unit of work, repositories, readers,
+    /// domain event dispatch after SaveChanges),
     /// the IP information cache and the IP2C client.
     /// </summary>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
@@ -30,6 +32,7 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException(
                 $"Connection string '{ConnectionStringName}' is missing. Locally, set it with dotnet user-secrets.");
 
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());

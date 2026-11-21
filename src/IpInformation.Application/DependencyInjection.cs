@@ -1,4 +1,6 @@
+using System.Reflection;
 using FluentValidation;
+using IpInformation.Application.Abstractions.Events;
 using IpInformation.Application.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -8,8 +10,8 @@ namespace IpInformation.Application;
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registers the Application layer: MediatR with every handler, the pipeline behaviors
-    /// and every FluentValidation validator in this assembly.
+    /// Registers the Application layer: MediatR with every handler, the pipeline behaviors,
+    /// every FluentValidation validator and every domain event handler in this assembly.
     /// </summary>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
@@ -23,8 +25,27 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(assembly);
 
+        AddDomainEventHandlers(services, assembly);
+
         services.TryAddSingleton(TimeProvider.System);
 
         return services;
+    }
+
+    /// <summary>
+    /// Registers every <see cref="IDomainEventHandler{TDomainEvent}"/> in the assembly as scoped,
+    /// once per event type it handles.
+    /// </summary>
+    private static void AddDomainEventHandlers(IServiceCollection services, Assembly assembly)
+    {
+        var registrations =
+            from type in assembly.GetTypes()
+            where type is { IsClass: true, IsAbstract: false, IsGenericTypeDefinition: false }
+            from handlerInterface in type.GetInterfaces()
+            where handlerInterface.IsGenericType
+                && handlerInterface.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
+            select ServiceDescriptor.Scoped(handlerInterface, type);
+
+        services.TryAddEnumerable(registrations);
     }
 }
