@@ -18,7 +18,7 @@ Scope: this repository only. The global `CLAUDE.md` still applies; where they co
 
 ## Database seeding
 
-- Seeding is a separate step that runs after migrations. The mechanism is decided when we get there.
+- Seed data is a manual SQL script, `docs/seed-data.sql`, run by the user in SSMS after the migrations. It is demo data only; the application never runs it. See `docs/data-model.md`.
 
 ## Git history
 
