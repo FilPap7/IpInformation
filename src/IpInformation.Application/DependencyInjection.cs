@@ -2,6 +2,7 @@ using System.Reflection;
 using FluentValidation;
 using IpInformation.Application.Abstractions.Events;
 using IpInformation.Application.Behaviors;
+using IpInformation.Application.Countries;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -26,6 +27,8 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(assembly);
 
         AddDomainEventHandlers(services, assembly);
+
+        services.AddScoped<CountryResolver>();
 
         services.TryAddSingleton(TimeProvider.System);
 

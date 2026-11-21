@@ -59,6 +59,12 @@ public sealed class IpAddress : AggregateRoot
         return true;
     }
 
+    /// <summary>
+    /// Records that this IP is being removed, e.g. because IP2C no longer knows it.
+    /// The repository deletes the row; the event lets the cached information of the IP be invalidated.
+    /// </summary>
+    public void Remove() => RaiseDomainEvent(new IpAddressRemoved(Ip));
+
     // Four numbers 0-255 separated by dots; no signs, whitespace or leading zeros ("01" can mean octal).
     // IPAddress.TryParse is not used because it also accepts forms like "1" (= 0.0.0.1).
     public static bool IsValidIpV4(string? ip)

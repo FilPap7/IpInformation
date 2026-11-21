@@ -5,11 +5,13 @@ using IpInformation.Domain.IpAddresses;
 namespace IpInformation.Application.Tests.Fakes;
 
 /// <summary>
-/// In-memory stand-in for the database: added entities become visible, and get an Id, only after SaveChangesAsync.
+/// In-memory stand-in for the database: added entities become visible, and get an Id,
+/// and removed ones disappear, only after SaveChangesAsync.
 /// </summary>
 internal sealed class FakeDatabase : ICountryRepository, IIpAddressRepository, IUnitOfWork
 {
     private readonly List<Entity> _pending = [];
+    private readonly List<IpAddress> _pendingRemovals = [];
     private int _nextId = 1;
 
     public List<Country> Countries { get; } = [];
@@ -27,9 +29,15 @@ internal sealed class FakeDatabase : ICountryRepository, IIpAddressRepository, I
     public Task<IpAddress?> GetByIpAsync(string ip, CancellationToken cancellationToken) =>
         Task.FromResult(IpAddresses.SingleOrDefault(i => i.Ip == ip));
 
+    public Task<IReadOnlyList<IpAddress>> GetBatchAsync(int afterId, int size, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<IpAddress>>(
+            IpAddresses.Where(i => i.Id > afterId).OrderBy(i => i.Id).Take(size).ToList());
+
     public void Add(Country country) => _pending.Add(country);
 
     public void Add(IpAddress ipAddress) => _pending.Add(ipAddress);
+
+    public void Remove(IpAddress ipAddress) => _pendingRemovals.Add(ipAddress);
 
     public Task SaveChangesAsync(CancellationToken cancellationToken)
     {
@@ -48,6 +56,13 @@ internal sealed class FakeDatabase : ICountryRepository, IIpAddressRepository, I
         }
 
         _pending.Clear();
+
+        foreach (var ipAddress in _pendingRemovals)
+        {
+            IpAddresses.Remove(ipAddress);
+        }
+
+        _pendingRemovals.Clear();
         return Task.CompletedTask;
     }
 }

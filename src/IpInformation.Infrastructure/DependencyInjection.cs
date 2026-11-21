@@ -4,6 +4,7 @@ using IpInformation.Application.Abstractions.Ip2c;
 using IpInformation.Domain.Abstractions;
 using IpInformation.Domain.Countries;
 using IpInformation.Domain.IpAddresses;
+using IpInformation.Infrastructure.BackgroundJobs;
 using IpInformation.Infrastructure.Caching;
 using IpInformation.Infrastructure.Events;
 using IpInformation.Infrastructure.Ip2c;
@@ -24,7 +25,7 @@ public static class DependencyInjection
     /// <summary>
     /// Registers the Infrastructure layer: EF Core on SQL Server (unit of work, repositories, readers,
     /// domain event dispatch after SaveChanges),
-    /// the IP information cache and the IP2C client.
+    /// the IP information cache, the IP2C client and the hourly IP refresh job.
     /// </summary>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
@@ -55,6 +56,14 @@ public static class DependencyInjection
             client.BaseAddress = options.BaseAddress;
             client.Timeout = options.Timeout;
         });
+
+        services.AddOptions<IpAddressRefreshOptions>()
+            .Bind(configuration.GetSection(IpAddressRefreshOptions.SectionName))
+            .Validate(o => o.Interval > TimeSpan.Zero, "IpAddressRefresh:Interval must be positive.")
+            .Validate(o => o.BatchSize > 0, "IpAddressRefresh:BatchSize must be positive.")
+            .ValidateOnStart();
+
+        services.AddHostedService<IpAddressRefreshJob>();
 
         return services;
     }

@@ -105,4 +105,15 @@ public class IpAddressTests
 
         Assert.Throws<ArgumentOutOfRangeException>(() => ipAddress.ChangeCountry(countryId, Later));
     }
+
+    [Fact]
+    public void Remove_Always_RaisesIpAddressRemovedWithTheIp()
+    {
+        var ipAddress = IpAddress.Create("8.8.8.8", countryId: 1, CreatedAt).Value;
+
+        ipAddress.Remove();
+
+        var domainEvent = Assert.Single(ipAddress.DomainEvents);
+        Assert.Equal(new IpAddressRemoved("8.8.8.8"), domainEvent);
+    }
 }

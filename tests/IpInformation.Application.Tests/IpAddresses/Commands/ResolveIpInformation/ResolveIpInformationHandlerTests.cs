@@ -1,4 +1,5 @@
 using IpInformation.Application.Abstractions.Ip2c;
+using IpInformation.Application.Countries;
 using IpInformation.Application.IpAddresses;
 using IpInformation.Application.IpAddresses.Commands.ResolveIpInformation;
 using IpInformation.Application.Tests.Fakes;
@@ -21,8 +22,9 @@ public class ResolveIpInformationHandlerTests
 
     public ResolveIpInformationHandlerTests()
     {
+        var timeProvider = new FixedTimeProvider(Now);
         _handler = new ResolveIpInformationHandler(
-            _cache, _database, _database, _ip2c, _database, new FixedTimeProvider(Now));
+            _cache, _database, _database, new CountryResolver(_database, _database, timeProvider), _ip2c, _database, timeProvider);
     }
 
     private Task<Result<IpInformationDto>> Resolve(string ip = Ip) =>

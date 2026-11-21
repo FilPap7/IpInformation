@@ -1,5 +1,6 @@
 using IpInformation.Application.Abstractions.Caching;
 using IpInformation.Application.Abstractions.Ip2c;
+using IpInformation.Application.Countries;
 using IpInformation.Domain.Abstractions;
 using IpInformation.Domain.Countries;
 using IpInformation.Domain.IpAddresses;
@@ -11,6 +12,7 @@ public sealed class ResolveIpInformationHandler(
     IIpInformationCache cache,
     IIpAddressRepository ipAddresses,
     ICountryRepository countries,
+    CountryResolver countryResolver,
     IIp2cClient ip2c,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
@@ -62,26 +64,16 @@ public sealed class ResolveIpInformationHandler(
             return Result.Failure<IpInformationDto>(IpInformationErrors.NotFound);
         }
 
-        var utcNow = timeProvider.GetUtcNow().UtcDateTime;
-
-        var country = await countries.GetByTwoLetterCodeAsync(ip2cCountry.TwoLetterCode, cancellationToken);
-        if (country is null)
+        var resolved = await countryResolver.GetOrCreateAsync(ip2cCountry, cancellationToken);
+        if (resolved.IsFailure)
         {
-            var created = Country.Create(ip2cCountry.Name, ip2cCountry.TwoLetterCode, ip2cCountry.ThreeLetterCode, utcNow);
-            if (created.IsFailure)
-            {
-                // Bad data from an external service is not the caller's fault: unexpected failure.
-                throw new InvalidOperationException($"IP2C returned an invalid country for IP {ip}: {created.Error.Description}");
-            }
-
-            country = created.Value;
-            countries.Add(country);
-
-            // Saved first because the new IP needs the Id of the country.
-            await unitOfWork.SaveChangesAsync(cancellationToken);
+            // Bad data from an external service is not the caller's fault: unexpected failure.
+            throw new InvalidOperationException($"IP2C returned an invalid country for IP {ip}: {resolved.Error.Description}");
         }
 
-        var ipAddress = IpAddress.Create(ip, country.Id, utcNow);
+        var country = resolved.Value;
+
+        var ipAddress = IpAddress.Create(ip, country.Id, timeProvider.GetUtcNow().UtcDateTime);
         if (ipAddress.IsFailure)
         {
             return Result.Failure<IpInformationDto>(ipAddress.Error);
