@@ -1,5 +1,6 @@
 using IpInformation.Api.Endpoints;
 using IpInformation.Api.ExceptionHandlers;
+using IpInformation.Api.Middleware;
 using IpInformation.Application;
 using IpInformation.Infrastructure;
 
@@ -9,13 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 // Every error response is ProblemDetails: Result failures (endpoints) and exceptions (handlers below).
-builder.Services.AddProblemDetails();
+// Each one carries the request's correlation ID.
+builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = CorrelationIdMiddleware.AddToProblemDetails);
 builder.Services.AddExceptionHandler<Ip2cUnavailableExceptionHandler>();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+// First, so every later log line of the request (including exception logs) carries the correlation ID.
+app.UseMiddleware<CorrelationIdMiddleware>();
 
 // Unhandled exceptions: 503 for IP2C failures, otherwise 500 without internal details.
 app.UseExceptionHandler();

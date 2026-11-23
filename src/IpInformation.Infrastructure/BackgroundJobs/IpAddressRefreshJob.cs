@@ -42,6 +42,9 @@ internal sealed class IpAddressRefreshJob(
 
     private async Task RunCycleSafelyAsync(CancellationToken stoppingToken)
     {
+        // Like a request, each cycle gets its own correlation ID, so its log lines can be told apart.
+        using var scope = logger.BeginScope("CorrelationId: {CorrelationId}", Guid.NewGuid().ToString("N"));
+
         try
         {
             await RunCycleAsync(stoppingToken);

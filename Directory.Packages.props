@@ -8,6 +8,8 @@
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
     <!-- Pinned: v13+ is RPL-1.5 / commercial. See CLAUDE.md. -->
     <PackageVersion Include="MediatR" Version="12.5.0" />
+    <!-- ILogger for the MediatR logging behavior. -->
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.15" />
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.15" />

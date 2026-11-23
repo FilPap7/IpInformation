@@ -146,6 +146,19 @@ Every error is a ProblemDetails response with a machine-readable `code`:
 Durations are `hh:mm:ss`. Any setting can be overridden by an environment variable, e.g.
 `IpAddressRefresh__Interval=00:01:00` for a refresh every minute. Invalid values stop the application at startup.
 
+## Logging
+
+Structured logging with the built-in .NET logger:
+
+- **Correlation ID per request.** The `X-Correlation-ID` request header is used when it is safe
+  (up to 64 letters, digits, `-`, `_`, `.`); otherwise a new ID is created. It is returned in the
+  `X-Correlation-ID` response header and as `correlationId` in every ProblemDetails response, and every log line
+  of the request carries it. Each refresh-job cycle gets its own ID.
+- **Every MediatR request is logged** with its name and duration; an expected failure is a warning with its error code.
+  Request contents are not logged.
+- **Output:** readable single-line console in Development, JSON (one object per line, with all properties and scopes)
+  everywhere else. SQL commands and `HttpClient` traffic are logged only from `Warning` up.
+
 ## Tests
 
 ```powershell
@@ -173,6 +186,5 @@ not end with `_Tests`, so it can never touch real data. To use another server, s
 
 ## Roadmap
 
-- Structured logging with a correlation ID per request.
 - A front-end for the lookup and the report.
 - Docker Compose (API + SQL Server) and Testcontainers for the database tests.

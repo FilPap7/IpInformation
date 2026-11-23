@@ -21,6 +21,8 @@ public static class DependencyInjection
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(assembly);
+            // Order matters: logging wraps validation, so validation failures are logged and timed too.
+            config.AddOpenBehavior(typeof(LoggingBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
